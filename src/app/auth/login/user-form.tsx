@@ -16,6 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const passwordRegex =
   /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
@@ -139,6 +140,11 @@ const UserForm = () => {
               </FormItem>
             )}
           />
+          <Link
+            href={"/auth/forgot-password"}
+            className="font-thin italic text-xs opacity-50 hover:text-red-500 hover:opacity-100">
+            Forgot password?
+          </Link>
           {/* {type === "register" && (
             <FormField
               control={form.control}
