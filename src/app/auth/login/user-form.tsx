@@ -23,21 +23,10 @@ const passwordRegex =
 
 const formSchema = z.object({
   username: z.string().min(3).max(20),
-  //   firstname: z.string().min(3).max(20).optional(),
-  //   lastname: z.string().min(3).max(20).optional(),
-  //   email: z.string().email(),
   password: z.string().min(8).regex(passwordRegex, {
     message:
       "Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number and one special character",
   }),
-  //   confirmPassword: z
-  //     .string()
-  //     .min(8)
-  //     .regex(passwordRegex, {
-  //       message:
-  //         "Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number and one special character",
-  //     })
-  //     .optional(),
 });
 
 const UserForm = () => {
@@ -45,12 +34,8 @@ const UserForm = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      //   firstname: "",
-      //   lastname: "",
       username: "",
-      //   email: "",
       password: "",
-      //   confirmPassword: "",
     },
   });
 
@@ -69,36 +54,6 @@ const UserForm = () => {
     <div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          {/* {type === "register" && (
-            <div>
-              <FormField
-                control={form.control}
-                name="firstname"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Firstname</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter your firstname" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="lastname"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Lastname</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter your lastname" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-          )} */}
           <FormField
             control={form.control}
             name="username"
@@ -112,21 +67,6 @@ const UserForm = () => {
               </FormItem>
             )}
           />
-          {/* {type === "register" && (
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Enter your email" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          )} */}
           <FormField
             control={form.control}
             name="password"
@@ -145,24 +85,6 @@ const UserForm = () => {
             className="font-thin italic text-xs opacity-50 hover:text-red-500 hover:opacity-100">
             Forgot password?
           </Link>
-          {/* {type === "register" && (
-            <FormField
-              control={form.control}
-              name="confirmPassword"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Confirm Password</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Enter your confirmPassword"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          )} */}
           <div className="buttons flex gap-3 mt-4 items-center">
             <Button type="submit">Login</Button>
             <p>or</p>
