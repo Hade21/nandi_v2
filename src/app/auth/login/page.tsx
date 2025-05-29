@@ -1,18 +1,46 @@
 import React from "react";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { ArrowLeft } from "lucide-react";
+import UserForm from "@/app/auth/login/user-form";
+import Link from "next/link";
 
 const Login = () => {
   return (
-    <div>
-      <Card>
+    <div className="w-full h-screen flex justify-center items-center">
+      <Card className="max-w-[50%]">
         <CardHeader>
-          <CardTitle>
-            Welcome to{" "}
-            <span className="font-[family-name:var(--font-rubik-moonrocks)] text-blue-500">
-              Nandi
-            </span>
-          </CardTitle>
+          <div className="flex justify-between items-center">
+            <div className="back">
+              <Link href={"/"}>
+                <ArrowLeft className="cursor-pointer" />
+              </Link>
+            </div>
+            <div className="text-right">
+              <CardTitle>
+                <h1 className="text-2xl">
+                  Welcome to{" "}
+                  <span className="font-[family-name:var(--font-rubik-moonrocks)] text-blue-500">
+                    Nandi
+                  </span>
+                </h1>
+              </CardTitle>
+              <CardDescription>
+                <p className="text-sm font-thin">
+                  Login to get access all features
+                </p>
+              </CardDescription>
+            </div>
+          </div>
         </CardHeader>
+        <CardContent>
+          <UserForm />
+        </CardContent>
       </Card>
     </div>
   );

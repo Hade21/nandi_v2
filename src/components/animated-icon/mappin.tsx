@@ -14,6 +14,7 @@ const MapPin = ({ size }: MapPinProps) => {
   useEffect(() => {
     playerRef.current?.playFromBeginning();
   }, []);
+
   return (
     <Player
       ref={playerRef}
