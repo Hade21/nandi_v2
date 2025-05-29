@@ -16,3 +16,13 @@ export type User = {
     refreshToken: string;
   };
 };
+
+export type RegisterResponse = {
+  id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  username: string;
+  role: "USER" | "ADMIN";
+  profilePict: string | null;
+};
