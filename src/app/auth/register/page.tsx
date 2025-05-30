@@ -1,0 +1,47 @@
+import React from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { ArrowLeft } from "lucide-react";
+import UserForm from "@/app/auth/register/user-form";
+import Link from "next/link";
+
+const Register = () => {
+  return (
+    <div className="w-full h-screen flex justify-center items-center">
+      <Card className="max-w-[50%]">
+        <CardHeader>
+          <div className="flex justify-between items-center">
+            <div className="back">
+              <Link href={"/"}>
+                <ArrowLeft className="cursor-pointer" />
+              </Link>
+            </div>
+            <div className="text-right">
+              <CardTitle>
+                <h1 className="text-2xl">
+                  Welcome to{" "}
+                  <span className="font-[family-name:var(--font-rubik-moonrocks)] text-blue-500">
+                    Nandi
+                  </span>
+                </h1>
+              </CardTitle>
+              <CardDescription>
+                <p className="text-sm font-thin">Register to get started</p>
+              </CardDescription>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <UserForm />
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
+
+export default Register;
