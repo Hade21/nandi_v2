@@ -1,3 +1,5 @@
+import { AxiosError } from "axios";
+
 export type Credentials = {
   username: string;
   password: string;
@@ -25,4 +27,12 @@ export type RegisterResponse = {
   username: string;
   role: "USER" | "ADMIN";
   profilePict: string | null;
+};
+
+export type CustomError = AxiosError & {
+  errors: {
+    message: string;
+    error: string;
+    statusCode: number;
+  };
 };
