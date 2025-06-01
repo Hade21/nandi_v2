@@ -17,11 +17,16 @@ import { useRouter } from "next/navigation";
 import { formSchema, FormSchema } from "@/schema/formSchema";
 import { Eye, EyeOff } from "lucide-react";
 import { useRegister } from "@/hooks/queryUserHooks";
+import { ClipLoader } from "react-spinners";
+import AlertDialogComp from "@/components/alert-dialog";
 
 const UserForm = () => {
   const [showPassword, setshowPassword] = useState<boolean>(false);
   const [showConfirmPassword, setshowConfirmPassword] =
     useState<boolean>(false);
+  const [showAlert, setShowAlert] = useState<boolean>(false);
+  const [alertTitle, setAlertTitle] = useState<string>("");
+  const [alertDesc, setAlertDesc] = useState<string>("");
   const router = useRouter();
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
@@ -38,16 +43,16 @@ const UserForm = () => {
   const { mutate, error, isPending, data } = useRegister();
 
   useEffect(() => {
-    if (data) console.log(data);
+    if (data) router.push("/auth/login");
 
-    if (error) alert(error);
-
-    if (isPending) alert("Uploading data");
-  }, [data, error, isPending]);
+    if (error) {
+      setAlertTitle("Error");
+      setAlertDesc(error.message);
+      setShowAlert(true);
+    }
+  }, [data, error, router]);
 
   function onSubmit(values: FormSchema) {
-    console.log(values);
-    alert("form submited");
     const data = new FormData();
     data.append("firstname", values.firstname);
     data.append("lastname", values.lastname);
@@ -167,7 +172,9 @@ const UserForm = () => {
             )}
           />
           <div className="buttons flex gap-3 mt-4 items-center">
-            <Button type="submit">Register</Button>
+            <Button type="submit">
+              {isPending && <ClipLoader size={20} color="#fff" />}Register
+            </Button>
             <p>or</p>
             <Button
               type="button"
@@ -178,6 +185,22 @@ const UserForm = () => {
           </div>
         </form>
       </Form>
+      <AlertDialogComp
+        open={showAlert}
+        setOpen={setShowAlert}
+        title={alertTitle}
+        description={alertDesc}
+        action={
+          <div>
+            <Button
+              type="button"
+              variant={"default"}
+              onClick={() => setShowAlert(false)}>
+              Close
+            </Button>
+          </div>
+        }
+      />
     </div>
   );
 };

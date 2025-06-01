@@ -1,7 +1,8 @@
 "use server";
 
-import axios from "axios";
+import { AxiosError } from "axios";
 import { formSchema } from "../schema/formSchema";
+import axiosInstance from "@/lib/axios-instance";
 
 export async function submitForm(formData: FormData) {
   const data = {
@@ -29,13 +30,17 @@ export async function submitForm(formData: FormData) {
   };
 
   try {
-    const response = await axios.post(
-      `${process.env.DATABASE_URL!}/api/v1/auth/register`,
-      body
-    );
+    const response = await axiosInstance.post("/api/v1/auth/register", body);
 
+    console.log(`success: ${response}`);
     return response.data;
   } catch (error) {
-    return error;
+    console.log(error);
+    if (error instanceof AxiosError) {
+      console.log(error.status);
+      const customError = new AxiosError(error.message);
+      customError.status = error.status;
+      return Promise.reject(customError);
+    }
   }
 }
