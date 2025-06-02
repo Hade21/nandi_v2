@@ -1,13 +1,19 @@
 import NextAuth from "next-auth";
-import type { NextAuthOptions } from "next-auth";
+import type { NextAuthOptions, Session } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { Credentials, User } from "../../../../../types";
 import axios from "axios";
 import "../../../../../envConfig";
+import { JWT } from "next-auth/jwt";
 
 export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
+    maxAge: 24 * 60 * 60,
+    updateAge: 4 * 60 * 60,
+  },
+  jwt: {
+    maxAge: 24 * 60 * 60,
   },
   providers: [
     CredentialsProvider({
@@ -41,10 +47,16 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async jwt({ token, user }) {
-      if (user) token.user = user;
+      if (user) {
+        token.exp = Math.floor(Date.now() / 1000) + 24 * 60 * 60;
+        token.user = user;
+      }
       return token;
     },
-    async session({ session, token }) {
+    async session({ session, token }: { session: Session; token: JWT }) {
+      session.expires = new Date(
+        (Math.floor(Date.now() / 1000) + 24 * 60 * 60) * 1000
+      ).toISOString();
       session.user = token.user as User;
       return session;
     },
