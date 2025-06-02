@@ -36,3 +36,10 @@ export type CustomError = AxiosError & {
     statusCode: number;
   };
 };
+
+export type SignInResult = {
+  error: string | null;
+  ok: boolean;
+  status: number;
+  url: string | null;
+};
