@@ -1,13 +1,12 @@
 import type { Metadata } from "next";
-import { Poppins, Rubik_Moonrocks } from "next/font/google";
+import { Inter, Rubik_Moonrocks } from "next/font/google";
 import "./globals.css";
 import QueryProvider from "@/utils/queryprovider";
 import NextAuthSession from "@/utils/sessionprovider";
+import ThemeProvider from "@/utils/themeprovider";
 
-const poppins = Poppins({
+const inter = Inter({
   subsets: ["latin"],
-  weight: "400",
-  variable: "--font-poppins",
 });
 
 const rubik_moonrocks = Rubik_Moonrocks({
@@ -27,12 +26,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning={true}>
       <body
-        className={`${rubik_moonrocks.variable} ${poppins.className} antialiased`}>
-        <QueryProvider>
-          <NextAuthSession>{children}</NextAuthSession>
-        </QueryProvider>
+        className={`${rubik_moonrocks.variable} ${inter.className} antialiased`}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light "
+          enableSystem={true}>
+          <QueryProvider>
+            <NextAuthSession>{children}</NextAuthSession>
+          </QueryProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
