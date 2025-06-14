@@ -17,7 +17,7 @@ axiosInstance.interceptors.response.use(
     if (error.response) {
       const { status, response } = error;
 
-      let errorMessage = "An error occured";
+      let errorMessage = "An error occurred";
 
       const data = response.data as unknown as CustomError;
       console.log(`AxiosCustomError: ${data}`);

@@ -1,4 +1,4 @@
-import React from "react";
+import UserForm from "@/app/auth/register/user-form";
 import {
   Card,
   CardContent,
@@ -7,13 +7,12 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { ArrowLeft } from "lucide-react";
-import UserForm from "@/app/auth/register/user-form";
 import Link from "next/link";
 
 const Register = () => {
   return (
     <div className="w-full h-screen flex justify-center items-center">
-      <Card className="max-w-[50%]">
+      <Card className="sm:max-w-[50%]">
         <CardHeader>
           <div className="flex justify-between items-center">
             <div className="back">
