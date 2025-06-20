@@ -1,10 +1,11 @@
 "use server";
 
-import { AxiosError } from "axios";
-import { formSchema } from "../schema/formSchema";
 import axiosInstance from "@/lib/axios-instance";
+import { AxiosError } from "axios";
+import { CustomError } from "../../types";
+import { registerSchema } from "../schema/userSchema";
 
-export async function submitForm(formData: FormData) {
+export async function register(formData: FormData) {
   const data = {
     firstname: formData.get("firstname"),
     lastname: formData.get("lastname"),
@@ -14,7 +15,7 @@ export async function submitForm(formData: FormData) {
     confirmPassword: formData.get("confirmPassword"),
   };
 
-  const result = formSchema.safeParse(data);
+  const result = registerSchema.safeParse(data);
 
   if (!result.success) throw new Error(result.error.message);
 
@@ -31,16 +32,16 @@ export async function submitForm(formData: FormData) {
 
   try {
     const response = await axiosInstance.post("/api/v1/auth/register", body);
-
-    console.log(`success: ${response}`);
     return response.data;
   } catch (error) {
     console.log(error);
     if (error instanceof AxiosError) {
-      console.log(error.status);
-      const customError = new AxiosError(error.message);
-      customError.status = error.status;
-      return Promise.reject(customError);
+      const errorData: CustomError = error.response?.data;
+      return Promise.reject(errorData.message);
+    } else {
+      return Promise.reject(
+        "An unknown error occurred. Please try again later."
+      );
     }
   }
 }

@@ -1,9 +1,10 @@
-import type { Metadata } from "next";
-import { Inter, Rubik_Moonrocks } from "next/font/google";
-import "./globals.css";
+import { Toaster } from "@/components/ui/sonner";
 import QueryProvider from "@/utils/queryprovider";
 import NextAuthSession from "@/utils/sessionprovider";
 import ThemeProvider from "@/utils/themeprovider";
+import type { Metadata } from "next";
+import { Inter, Rubik_Moonrocks } from "next/font/google";
+import "./globals.css";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -28,14 +29,17 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning={true}>
       <body
-        className={`${rubik_moonrocks.variable} ${inter.className} antialiased`}>
+        className={`${rubik_moonrocks.variable} ${inter.className} antialiased`}
+      >
         <ThemeProvider
           attribute="class"
           defaultTheme="light "
-          enableSystem={true}>
+          enableSystem={true}
+        >
           <QueryProvider>
             <NextAuthSession>{children}</NextAuthSession>
           </QueryProvider>
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>

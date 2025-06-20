@@ -1,9 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+import AlertDialogComp from "@/components/alert-dialog";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -13,35 +11,28 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import AlertDialogComp from "@/components/alert-dialog";
+import { LoginSchema, loginSchema } from "@/schema/userSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff } from "lucide-react";
-import { SignInResult } from "../../../../types";
+import { signIn } from "next-auth/react";
+import { useTheme } from "next-themes";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { ClipLoader } from "react-spinners";
-
-const passwordRegex =
-  /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
-
-const formSchema = z.object({
-  username: z.string().min(3).max(20),
-  password: z.string().min(8).regex(passwordRegex, {
-    message:
-      "Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number and one special character",
-  }),
-});
+import { SignInResult } from "../../../../types";
 
 const UserForm = () => {
-  const [showPassword, setshowPassword] = useState<boolean>(false);
+  const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showAlert, setShowAlert] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [alertTitle, setAlertTitle] = useState<string>("");
   const [alertDesc, setAlertDesc] = useState<string>("");
   const router = useRouter();
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const { theme } = useTheme();
+  const form = useForm<LoginSchema>({
+    resolver: zodResolver(loginSchema),
     defaultValues: {
       username: "",
       password: "",
@@ -49,7 +40,7 @@ const UserForm = () => {
   });
 
   function handleResult(result: SignInResult | undefined) {
-    if (result?.ok) router.push("/maps");
+    if (result?.ok) return router.push("/maps");
 
     if (!result?.ok && result?.status === 401) {
       setAlertTitle("Something went wrong");
@@ -62,7 +53,7 @@ const UserForm = () => {
     }
   }
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: LoginSchema) {
     setLoading(true);
     const result = await signIn("credentials", {
       redirect: false,
@@ -106,7 +97,8 @@ const UserForm = () => {
                     />
                     <div
                       className="cursor-pointer absolute top-1/2 right-2 -translate-y-1/2"
-                      onClick={() => setshowPassword(!showPassword)}>
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
                       {showPassword ? <EyeOff /> : <Eye />}
                     </div>
                   </div>
@@ -117,18 +109,26 @@ const UserForm = () => {
           />
           <Link
             href={"/auth/forgot-password"}
-            className="font-thin italic text-xs opacity-50 hover:text-red-500 hover:opacity-100">
+            className="font-thin italic text-xs opacity-50 hover:text-red-500 hover:opacity-100"
+          >
             Forgot password?
           </Link>
           <div className="buttons flex gap-3 mt-4 items-center">
             <Button type="submit">
-              {loading && <ClipLoader size={20} color="#fff" />}Login
+              {loading && (
+                <ClipLoader
+                  size={20}
+                  color={theme === "dark" ? "black" : "white"}
+                />
+              )}
+              Login
             </Button>
             <p>or</p>
             <Button
               type="button"
               variant={"outline"}
-              onClick={() => router.push("/auth/register")}>
+              onClick={() => router.push("/auth/register")}
+            >
               Register
             </Button>
           </div>
@@ -144,7 +144,8 @@ const UserForm = () => {
             <Button
               type="button"
               variant={"default"}
-              onClick={() => setShowAlert(false)}>
+              onClick={() => setShowAlert(false)}
+            >
               Close
             </Button>
           </div>
