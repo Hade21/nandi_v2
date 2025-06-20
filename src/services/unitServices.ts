@@ -11,6 +11,15 @@ interface UserSession {
   data: User;
 }
 
+function handleError(error: unknown) {
+  if (error instanceof AxiosError) {
+    const errorData: CustomError = error.response?.data;
+    return Promise.reject(errorData.message);
+  } else {
+    return Promise.reject("An unknown error occurred. Please try again later.");
+  }
+}
+
 export async function addUnit(formData: FormData) {
   const session = await getServerSession(authOptions);
   const accessToken = (session?.user as UserSession).data.token?.accessToken;
@@ -31,13 +40,49 @@ export async function addUnit(formData: FormData) {
     });
     return response.data;
   } catch (error) {
-    if (error instanceof AxiosError) {
-      const errorData: CustomError = error.response?.data;
-      return Promise.reject(errorData.message);
-    } else {
-      return Promise.reject(
-        "An unknown error occurred. Please try again later."
-      );
-    }
+    return handleError(error);
+  }
+}
+
+export async function updateUnit(formData: FormData) {
+  const session = await getServerSession(authOptions);
+  const accessToken = (session?.user as UserSession).data.token?.accessToken;
+  const data = {
+    name: formData.get("name"),
+    type: formData.get("type"),
+    egi: formData.get("egi"),
+    id: formData.get("id"),
+  };
+
+  const result = unitSchema.safeParse(data);
+  if (!result.success) throw new Error(result.error.message);
+
+  try {
+    const response = await axiosInstance.put(`/api/v1/units/${data.id}`, data, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    return handleError(error);
+  }
+}
+
+export async function getUnit(id: string) {
+  const session = await getServerSession(authOptions);
+  const accessToken = (session?.user as UserSession).data.token?.accessToken;
+
+  try {
+    const response = await axiosInstance.get(`/api/v1/units/${id}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    return handleError(error);
   }
 }
