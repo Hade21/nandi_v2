@@ -1,4 +1,3 @@
-import UserForm from "@/app/auth/register/user-form";
 import {
   Card,
   CardContent,
@@ -8,39 +7,37 @@ import {
 } from "@/components/ui/card";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import UnitForm from "./unit-form";
 
-const Register = () => {
+const NewUnit = () => {
   return (
     <div className="w-full h-screen flex justify-center items-center">
       <Card className="w-full max-w-sm">
         <CardHeader>
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center gap-2">
             <div className="back">
-              <Link href={"/"}>
+              <Link href={"/maps"}>
                 <ArrowLeft className="cursor-pointer" />
               </Link>
             </div>
             <div className="text-right">
               <CardTitle>
-                <h1 className="text-2xl">
-                  Welcome to{" "}
-                  <span className="font-[family-name:var(--font-rubik-moonrocks)] text-blue-500">
-                    Nandi
-                  </span>
-                </h1>
+                <h1 className="text-2xl text-red-500">Add New Unit</h1>
               </CardTitle>
               <CardDescription>
-                <p className="text-sm font-thin">Register to get started</p>
+                <p className="text-sm font-light">
+                  Enter the details of the new unit.
+                </p>
               </CardDescription>
             </div>
           </div>
         </CardHeader>
         <CardContent>
-          <UserForm />
+          <UnitForm />{" "}
         </CardContent>
       </Card>
     </div>
   );
 };
 
-export default Register;
+export default NewUnit;

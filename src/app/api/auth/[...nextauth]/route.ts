@@ -1,10 +1,10 @@
-import NextAuth from "next-auth";
-import type { NextAuthOptions, Session } from "next-auth";
-import CredentialsProvider from "next-auth/providers/credentials";
-import { Credentials, User } from "../../../../../types";
 import axios from "axios";
-import "../../../../../envConfig";
+import type { NextAuthOptions, Session } from "next-auth";
+import NextAuth from "next-auth";
 import { JWT } from "next-auth/jwt";
+import CredentialsProvider from "next-auth/providers/credentials";
+import "../../../../../envConfig";
+import { Credentials, User } from "../../../../../types";
 
 export const authOptions: NextAuthOptions = {
   session: {
@@ -27,7 +27,7 @@ export const authOptions: NextAuthOptions = {
         if (!username && !password) return null;
         try {
           const response = await axios.post(
-            `${process.env.DATABASE_URL!}/api/v1/auth/login`,
+            `${process.env.BACKEND_URL!}/api/v1/auth/login`,
             {
               username,
               password,
@@ -64,6 +64,26 @@ export const authOptions: NextAuthOptions = {
   pages: {
     signIn: "/auth/login",
     error: "/auth/error",
+  },
+  secret: process.env.NEXTAUTH_SECRET,
+  debug: process.env.NODE_ENV === "development",
+  events: {
+    async signIn(message) {
+      console.log("User signed in:", message);
+    },
+  },
+  logger: {
+    error(code, metadata) {
+      console.error(`Error: ${code}`, metadata);
+    },
+    warn(code) {
+      console.warn(`Warning: ${code}`);
+    },
+    debug(code, metadata) {
+      if (process.env.NODE_ENV === "development") {
+        console.debug(`Debug: ${code}`, metadata);
+      }
+    },
   },
 };
 
