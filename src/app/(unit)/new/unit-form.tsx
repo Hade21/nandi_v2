@@ -47,10 +47,11 @@ const UnitForm = () => {
     if (error) {
       toast.error("Something went wrong", {
         description: error.message,
+        position: "top-center",
       });
     }
     if (data) {
-      toast.success("Unit added successfully");
+      toast.success("Unit added successfully", { position: "top-center" });
       // Reset the form after successful submission
       form.reset();
     }
