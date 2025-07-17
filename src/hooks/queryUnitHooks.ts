@@ -1,7 +1,13 @@
-import { addUnit, getUnit, updateUnit } from "@/services/unitServices";
+import {
+  addUnit,
+  getAllUnit,
+  getUnit,
+  updateUnit,
+} from "@/services/unitServices";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 function changeErrorMessage(error: Error) {
+  console.log(`Error: ${error}`);
   if (error.message === "Unauthorized") {
     return (error.message =
       "Unauthorized access. Please login as admin to continue.");
@@ -41,5 +47,15 @@ export const useUnitQuery = (id: string) => {
     queryKey: ["unit", id],
     queryFn: () => getUnit(id),
     enabled: !!id, // Only run the query if id is defined
+  });
+};
+
+export const useUnitsQuery = () => {
+  return useQuery({
+    queryKey: ["units"],
+    queryFn: () => getAllUnit(),
+    retry: 3,
+    retryDelay: 3000,
+    staleTime: 60 * 60 * 1000,
   });
 };

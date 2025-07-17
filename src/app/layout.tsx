@@ -1,7 +1,8 @@
 import { Toaster } from "@/components/ui/sonner";
-import QueryProvider from "@/utils/queryprovider";
-import NextAuthSession from "@/utils/sessionprovider";
-import ThemeProvider from "@/utils/themeprovider";
+import QueryProvider from "@/utils/queryProvider";
+import NextAuthSession from "@/utils/sessionProvider";
+import { UnitStoreProvider } from "@/utils/storeProvider";
+import ThemeProvider from "@/utils/themeProvider";
 import type { Metadata } from "next";
 import { Inter, Rubik_Moonrocks } from "next/font/google";
 import "./globals.css";
@@ -37,9 +38,11 @@ export default function RootLayout({
           enableSystem={true}
         >
           <QueryProvider>
-            <NextAuthSession>{children}</NextAuthSession>
+            <NextAuthSession>
+              <UnitStoreProvider>{children}</UnitStoreProvider>
+            </NextAuthSession>
           </QueryProvider>
-          <Toaster />
+          <Toaster richColors />
         </ThemeProvider>
       </body>
     </html>

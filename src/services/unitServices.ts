@@ -3,7 +3,7 @@
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import axiosInstance from "@/lib/axios-instance";
 import { unitSchema } from "@/schema/unitSchema";
-import { AxiosError } from "axios";
+import axios, { AxiosError } from "axios";
 import { getServerSession } from "next-auth";
 import { CustomError, User } from "../../types";
 
@@ -12,7 +12,12 @@ interface UserSession {
 }
 
 function handleError(error: unknown) {
+  console.log(`Error server side: ${error}`);
+  if (axios.isCancel(error)) {
+    return Promise.reject("Request canceled due to timeout");
+  }
   if (error instanceof AxiosError) {
+    console.log(`Axios Error: ${(error.config, error.stack, error.response)}`);
     const errorData: CustomError = error.response?.data;
     return Promise.reject(errorData.message);
   } else {
@@ -82,6 +87,15 @@ export async function getUnit(id: string) {
       },
     });
     return response.data;
+  } catch (error) {
+    return handleError(error);
+  }
+}
+
+export async function getAllUnit() {
+  try {
+    const response = await fetch("https://hade21.xyz/api/v1/units");
+    return response.json();
   } catch (error) {
     return handleError(error);
   }

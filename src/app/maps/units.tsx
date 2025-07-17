@@ -1,0 +1,157 @@
+"use client";
+
+import SearchBox from "@/components/search-box";
+import { useUnitsQuery } from "@/hooks/queryUnitHooks";
+import { useUnitStore } from "@/utils/storeProvider";
+import { AdvancedMarker } from "@vis.gl/react-google-maps";
+import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
+import { UnitData } from "../../../types";
+import CardUnit from "./card";
+
+const Units = () => {
+  const selectedUnit = useUnitStore((state) => state.selectedUnit);
+  const setSelectedUnit = useUnitStore((state) => state.setSelectedUnit);
+  const setUnits = useUnitStore((state) => state.setUnits);
+  const units = useUnitStore((state) => state.units);
+  const { data, isLoading, error } = useUnitsQuery();
+  const searchItems = useRef<{ value: string; label: string }[]>([]);
+  const [clicked, setClicked] = useState<UnitData | null>(null);
+
+  function setSelectedUnitById(id: string) {
+    const selectedUnit = units.find((unit: UnitData) => unit.name === id);
+    if (selectedUnit) setSelectedUnit(selectedUnit);
+    else {
+      setSelectedUnit({
+        id: "",
+        name: "",
+        type: "",
+        egi: "",
+        createdBy: "",
+      });
+    }
+  }
+
+  useEffect(() => {
+    if (data) {
+      setUnits(data.data);
+      toast.success("Units Data Fetched Successfully.");
+      toast.dismiss();
+      searchItems.current = data.data.map((unit: UnitData) => {
+        return {
+          value: unit.id,
+          label: unit.name,
+        };
+      });
+      searchItems.current.sort((a, b) => a.label.localeCompare(b.label));
+    }
+  }, [data, setUnits]);
+
+  if (isLoading) toast.loading("Loading Units Data...");
+  if (error) {
+    toast.dismiss();
+    if (error.message) toast.error(error.message);
+    else toast.error("Something went wrong. Please try again later.");
+  }
+
+  return (
+    <div className="relative">
+      {!selectedUnit.id &&
+        units &&
+        units.map(
+          (unit: UnitData) =>
+            unit.locations && (
+              <AdvancedMarker
+                key={unit.id}
+                position={{
+                  lat: Number(unit.locations.lat),
+                  lng: Number(unit.locations.long),
+                }}
+                onClick={() => setClicked(unit)}
+                zIndex={clicked?.id === unit.id ? 1000 : 1}
+              >
+                <span className="relative flex items-center justify-center">
+                  <Image
+                    src={selectIcon(unit.type)}
+                    width={24}
+                    height={24}
+                    alt={unit.type}
+                  />
+                  <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-full">
+                    <CardUnit
+                      id={unit.id}
+                      name={unit.name}
+                      type={unit.type}
+                      egi={unit.egi}
+                      key={unit.id}
+                      location={unit.locations.location}
+                      dateTime={unit.locations.dateTime}
+                    />
+                  </div>
+                </span>
+              </AdvancedMarker>
+            )
+        )}
+
+      {selectedUnit.locations && (
+        <AdvancedMarker
+          key={selectedUnit.id}
+          position={{
+            lat: Number(selectedUnit.locations?.lat),
+            lng: Number(selectedUnit.locations?.long),
+          }}
+          onClick={() => setClicked(selectedUnit)}
+          zIndex={clicked?.id === selectedUnit.id ? 1000 : 1}
+        >
+          <span className="relative flex items-center justify-center">
+            <Image
+              src={selectIcon(selectedUnit.type)}
+              width={24}
+              height={24}
+              alt={selectedUnit.type}
+            />
+            <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-full">
+              <CardUnit
+                id={selectedUnit.id}
+                name={selectedUnit.name}
+                type={selectedUnit.type}
+                egi={selectedUnit.egi}
+                key={selectedUnit.id}
+                location={selectedUnit.locations.location}
+                dateTime={selectedUnit.locations.dateTime}
+              />
+            </div>
+          </span>
+        </AdvancedMarker>
+      )}
+
+      {units && (
+        <div className="absolute -top-[98vh] left-2">
+          <SearchBox
+            items={searchItems.current}
+            selectAction={setSelectedUnitById}
+          />
+        </div>
+      )}
+    </div>
+  );
+};
+
+function selectIcon(type: string) {
+  switch (type) {
+    case "TOWER LAMP":
+      return "/tower-lamp.png";
+    case "GENSET":
+      return "/generator.svg";
+    case "AIR COMPRESSOR":
+      return "/air-compressor.png";
+    case "MEGA TOWER":
+      return "/mega-tower.svg";
+    case "WELDING MACHINE":
+      return "/welding-machine.png";
+  }
+  return "/location.png"; // Fallback icon
+}
+
+export default Units;
