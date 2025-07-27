@@ -3,6 +3,7 @@
 import AlertDialogComp from "@/components/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { useUnitStore } from "@/utils/storeProvider";
 import { AnimatePresence, motion } from "motion/react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
@@ -24,6 +25,7 @@ const CardUnit = (props: CardUnitProps) => {
   const router = useRouter();
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
+  const setSelectedUnit = useUnitStore((state) => state.setSelectedUnit);
 
   const date = new Date(props.dateTime!);
   const timeStampFormatted = `${date.toLocaleDateString("id-ID", {
@@ -121,7 +123,16 @@ const CardUnit = (props: CardUnitProps) => {
                     <Button
                       type="button"
                       variant="secondary"
-                      onClick={() => router.push(`/update/${props.id}`)}
+                      onClick={() => {
+                        setSelectedUnit({
+                          id: "",
+                          name: "",
+                          type: "",
+                          egi: "",
+                          createdBy: "",
+                        });
+                        router.push(`/update/${props.id}`);
+                      }}
                     >
                       Edit Unit Data
                     </Button>

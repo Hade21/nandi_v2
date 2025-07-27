@@ -53,9 +53,8 @@ export const useUnitQuery = (id: string) => {
 export const useUnitsQuery = () => {
   return useQuery({
     queryKey: ["units"],
-    queryFn: () => getAllUnit(),
-    retry: 3,
-    retryDelay: 3000,
-    staleTime: 60 * 60 * 1000,
+    queryFn: getAllUnit,
+    staleTime: 1000 * 10,
+    gcTime: 20000,
   });
 };

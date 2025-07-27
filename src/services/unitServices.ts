@@ -1,10 +1,9 @@
 "use server";
 
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { auth } from "@/app/auth";
 import axiosInstance from "@/lib/axios-instance";
 import { unitSchema } from "@/schema/unitSchema";
 import axios, { AxiosError } from "axios";
-import { getServerSession } from "next-auth";
 import { CustomError, User } from "../../types";
 
 interface UserSession {
@@ -26,7 +25,7 @@ function handleError(error: unknown) {
 }
 
 export async function addUnit(formData: FormData) {
-  const session = await getServerSession(authOptions);
+  const session = await auth();
   const accessToken = (session?.user as UserSession).data.token?.accessToken;
   const data = {
     name: formData.get("name"),
@@ -50,7 +49,7 @@ export async function addUnit(formData: FormData) {
 }
 
 export async function updateUnit(formData: FormData) {
-  const session = await getServerSession(authOptions);
+  const session = await auth();
   const accessToken = (session?.user as UserSession).data.token?.accessToken;
   const data = {
     name: formData.get("name"),
@@ -77,7 +76,7 @@ export async function updateUnit(formData: FormData) {
 }
 
 export async function getUnit(id: string) {
-  const session = await getServerSession(authOptions);
+  const session = await auth();
   const accessToken = (session?.user as UserSession).data.token?.accessToken;
 
   try {
@@ -94,6 +93,8 @@ export async function getUnit(id: string) {
 
 export async function getAllUnit() {
   try {
+    // const response = await axiosInstance.get("/api/v1/units");
+    // return response.data;
     const response = await fetch("https://hade21.xyz/api/v1/units");
     return response.json();
   } catch (error) {

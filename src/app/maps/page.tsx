@@ -1,11 +1,11 @@
 import MapsProvider from "./maps-provider";
-import Units from "./units";
+import PrefetchUnits from "./prefetch-units";
 
 const MapsPage = () => {
   return (
     <div className="w-full h-screen">
       <MapsProvider>
-        <Units />
+        <PrefetchUnits />
       </MapsProvider>
     </div>
   );
