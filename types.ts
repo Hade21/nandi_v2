@@ -34,7 +34,7 @@ export type CustomError = {
 };
 
 export type SignInResult = {
-  error: string | null;
+  error: string | undefined;
   ok: boolean;
   status: number;
   url: string | null;

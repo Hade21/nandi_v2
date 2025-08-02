@@ -139,17 +139,7 @@ const UserForm = () => {
         description={alertDesc}
         open={showAlert}
         setOpen={setShowAlert}
-        action={
-          <div>
-            <Button
-              type="button"
-              variant={"default"}
-              onClick={() => setShowAlert(false)}
-            >
-              Close
-            </Button>
-          </div>
-        }
+        action={[{ title: "Close", function: () => setShowAlert(false) }]}
       />
     </div>
   );
