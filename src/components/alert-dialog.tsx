@@ -1,12 +1,11 @@
-import React from "react";
 import {
   AlertDialog,
   AlertDialogAction,
+  AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogContent,
 } from "./ui/alert-dialog";
 
 interface AlertDialogProps {
@@ -14,7 +13,7 @@ interface AlertDialogProps {
   setOpen: (open: boolean) => void;
   title: string;
   description: string;
-  action?: React.ReactNode;
+  action?: { title: string; function: () => void }[];
 }
 const AlertDialogComp = ({
   open,
@@ -31,7 +30,13 @@ const AlertDialogComp = ({
           <AlertDialogDescription>{description}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogAction>{action}</AlertDialogAction>
+          {action?.map((func, index) => {
+            return (
+              <AlertDialogAction key={index} onClick={func.function}>
+                {func.title}
+              </AlertDialogAction>
+            );
+          })}
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

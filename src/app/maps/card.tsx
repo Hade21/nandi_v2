@@ -9,7 +9,6 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import UpdateAction from "./updateAction";
 
 interface CardUnitProps {
   id: string;
@@ -18,6 +17,7 @@ interface CardUnitProps {
   egi: string;
   dateTime: string;
   location: string;
+  createdBy?: string;
 }
 
 const CardUnit = (props: CardUnitProps) => {
@@ -26,6 +26,8 @@ const CardUnit = (props: CardUnitProps) => {
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
   const setSelectedUnit = useUnitStore((state) => state.setSelectedUnit);
+  const setLocation = useUnitStore((state) => state.setLocation);
+  const setUpdatingUnit = useUnitStore((state) => state.setUpdatingUnit);
 
   const date = new Date(props.dateTime!);
   const timeStampFormatted = `${date.toLocaleDateString("id-ID", {
@@ -36,6 +38,23 @@ const CardUnit = (props: CardUnitProps) => {
     hour: "numeric",
     minute: "numeric",
   })}`;
+
+  const updateAction = [
+    {
+      title: "Use my GPS",
+      function: () => handleUpdate("gps"),
+    },
+    {
+      title: "Pin on maps",
+      function: () => handleUpdate("pin"),
+    },
+  ];
+
+  function handleUpdate(type: "gps" | "pin") {
+    if (type === "gps") {
+      setLocation("gps");
+    }
+  }
 
   return (
     <div>
@@ -117,7 +136,13 @@ const CardUnit = (props: CardUnitProps) => {
                 </div>
                 {status === "authenticated" && (
                   <div className="action flex items-center justify-center gap-3 w-full">
-                    <Button type="button" onClick={() => setIsUpdating(true)}>
+                    <Button
+                      type="button"
+                      onClick={() => {
+                        setIsUpdating(true);
+                        setUpdatingUnit(true);
+                      }}
+                    >
                       Update Location
                     </Button>
                     <Button
@@ -147,7 +172,7 @@ const CardUnit = (props: CardUnitProps) => {
           setOpen={setIsUpdating}
           title="Update Location"
           description="Are you sure you want to update the location of this unit?"
-          action={<UpdateAction />}
+          action={updateAction}
           key={props.id + "-dialog"}
         />
       </AnimatePresence>

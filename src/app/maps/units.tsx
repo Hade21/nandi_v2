@@ -12,15 +12,23 @@ import CardUnit from "./card";
 
 const Units = () => {
   const selectedUnit = useUnitStore((state) => state.selectedUnit);
+  const updatingUnit = useUnitStore((state) => state.updatingUnit);
   const setSelectedUnit = useUnitStore((state) => state.setSelectedUnit);
   const setUnits = useUnitStore((state) => state.setUnits);
   const units = useUnitStore((state) => state.units);
   const { data, isLoading, error } = useUnitsQuery();
   const searchItems = useRef<{ value: string; label: string }[]>([]);
   const [clicked, setClicked] = useState<UnitData | null>(null);
+  const [userLocation, setUserLocation] = useState<{
+    lat: number;
+    lng: number;
+    head: number | null;
+    label: string;
+  } | null>(null);
 
   function setSelectedUnitById(id: string) {
     const selectedUnit = units.find((unit: UnitData) => unit.name === id);
+
     if (selectedUnit) setSelectedUnit(selectedUnit);
     else {
       setSelectedUnit({
@@ -48,7 +56,40 @@ const Units = () => {
     }
   }, [data, setUnits]);
 
+  useEffect(() => {
+    if (!updatingUnit) {
+      if (navigator.geolocation) {
+        navigator.geolocation.watchPosition(
+          (position) => {
+            const userLoc = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+              head: position.coords.heading,
+              label: "My Location",
+            };
+            setUserLocation(userLoc);
+          },
+          (error) => {
+            toast.warning("Can't locate your position", {
+              description: error.message,
+            });
+          },
+          {
+            enableHighAccuracy: true,
+            maximumAge: 0,
+            timeout: 10000,
+          }
+        );
+      } else {
+        toast.warning("Can't locate your position", {
+          description: "Please enable geolocation on your browser",
+        });
+      }
+    }
+  }, [updatingUnit]);
+
   if (isLoading) toast.loading("Loading Units Data...");
+
   if (error) {
     toast.dismiss();
     if (error.message) toast.error(error.message);
@@ -57,7 +98,8 @@ const Units = () => {
 
   return (
     <div className="relative">
-      {!selectedUnit.id &&
+      {!updatingUnit &&
+        !selectedUnit.id &&
         units &&
         units.map(
           (unit: UnitData) =>
@@ -87,6 +129,7 @@ const Units = () => {
                       key={unit.id}
                       location={unit.locations.location}
                       dateTime={unit.locations.dateTime}
+                      createdBy={unit.createdBy}
                     />
                   </div>
                 </span>
@@ -121,6 +164,24 @@ const Units = () => {
                 location={selectedUnit.locations.location}
                 dateTime={selectedUnit.locations.dateTime}
               />
+            </div>
+          </span>
+        </AdvancedMarker>
+      )}
+      {userLocation?.label && (
+        <AdvancedMarker
+          key={"user"}
+          position={{ lat: userLocation.lat, lng: userLocation.lng }}
+        >
+          <span className="relative flex items-center justify-center">
+            <Image
+              src={"/position.svg"}
+              width={24}
+              height={24}
+              alt={"User's Location"}
+            />
+            <div className="label absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-full">
+              {userLocation.label}
             </div>
           </span>
         </AdvancedMarker>

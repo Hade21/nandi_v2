@@ -56,5 +56,6 @@ export const useUnitsQuery = () => {
     queryFn: getAllUnit,
     staleTime: 1000 * 10,
     gcTime: 20000,
+    refetchOnWindowFocus: false,
   });
 };
