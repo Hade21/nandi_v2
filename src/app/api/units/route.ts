@@ -1,6 +1,6 @@
 import { AxiosError } from "axios";
 import { NextResponse } from "next/server";
-import { CustomError } from "../../../../types";
+import { CustomError } from "../../../../types/types";
 
 export async function GET() {
   try {

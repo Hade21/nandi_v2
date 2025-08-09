@@ -4,7 +4,7 @@ import { auth } from "@/app/auth";
 import axiosInstance from "@/lib/axios-instance";
 import { unitSchema } from "@/schema/unitSchema";
 import axios, { AxiosError } from "axios";
-import { CustomError, User } from "../../types";
+import { CustomError, User } from "../../types/types";
 
 interface UserSession {
   data: User;

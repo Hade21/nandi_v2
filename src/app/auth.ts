@@ -3,7 +3,7 @@ import type { Session } from "next-auth";
 import NextAuth from "next-auth";
 import { JWT } from "next-auth/jwt";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { Credentials, User } from "../../types";
+import { Credentials } from "../../types/types";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   session: {
@@ -47,16 +47,28 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
+        console.log(user);
+        token.id = user.data.id;
+        token.firstName = user.data.firstName;
+        token.lastName = user.data.lastName;
+        token.profilePict = user.data.profilePict;
+        token.role = user.data.role;
+        token.accessToken = user.data.token.accessToken;
+        token.refreshToken = user.data.token.refreshToken;
         token.exp = Math.floor(Date.now() / 1000) + 24 * 60 * 60;
         token.user = user;
       }
       return token;
     },
     async session({ session, token }: { session: Session; token: JWT }) {
-      session.expires = new Date(
-        (Math.floor(Date.now() / 1000) + 24 * 60 * 60) * 1000
-      ).toISOString();
-      session.user = token.user as User;
+      if (session.user && token) {
+        session.expires = new Date(Number(token.exp)).toDateString();
+        session.user.id = token.id as string;
+        session.user.firstName = token.firstName as string;
+        session.user.lastName = token.lastName as string;
+        session.user.profilePict = token.profilePict as string;
+        session.user.role = token.role;
+      }
       return session;
     },
   },

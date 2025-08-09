@@ -1,5 +1,6 @@
 "use client";
 
+import HamburgerMenu from "@/components/hamburger-menu";
 import SearchBox from "@/components/search-box";
 import { useUnitsQuery } from "@/hooks/queryUnitHooks";
 import { useUnitStore } from "@/utils/storeProvider";
@@ -7,7 +8,7 @@ import { AdvancedMarker } from "@vis.gl/react-google-maps";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
-import { UnitData } from "../../../types";
+import { UnitData } from "../../../types/types";
 import CardUnit from "./card";
 
 const Units = () => {
@@ -195,6 +196,8 @@ const Units = () => {
           />
         </div>
       )}
+
+      <HamburgerMenu />
     </div>
   );
 };

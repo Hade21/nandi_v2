@@ -21,7 +21,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { ClipLoader } from "react-spinners";
-import { SignInResult } from "../../../../types";
+import { SignInResult } from "../../../../types/types";
 
 const UserForm = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);

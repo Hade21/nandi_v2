@@ -1,5 +1,5 @@
 import { createStore } from "zustand/vanilla";
-import { UnitData } from "../../types";
+import { UnitData } from "../../types/types";
 
 export type UnitState = {
   units: UnitData[];
