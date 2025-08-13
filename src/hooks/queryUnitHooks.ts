@@ -2,6 +2,7 @@ import {
   addUnit,
   getAllUnit,
   getUnit,
+  updateLocation,
   updateUnit,
 } from "@/services/unitServices";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -57,5 +58,18 @@ export const useUnitsQuery = () => {
     staleTime: 1000 * 10,
     gcTime: 20000,
     refetchOnWindowFocus: false,
+  });
+};
+
+export const useUpdateLocation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (data: FormData) => updateLocation(data),
+    onError(error) {
+      return changeErrorMessage(error);
+    },
+    onSuccess() {
+      queryClient.invalidateQueries({ queryKey: ["units"] });
+    },
   });
 };

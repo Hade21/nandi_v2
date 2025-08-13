@@ -1,5 +1,6 @@
 "use client";
 
+import AlertDialogComp from "@/components/alert-dialog";
 import HamburgerMenu from "@/components/hamburger-menu";
 import SearchBox from "@/components/search-box";
 import { useUnitsQuery } from "@/hooks/queryUnitHooks";
@@ -10,6 +11,7 @@ import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { UnitData } from "../../../types/types";
 import CardUnit from "./card";
+import UpdateModals from "./update-modals";
 
 const Units = () => {
   const selectedUnit = useUnitStore((state) => state.selectedUnit);
@@ -17,6 +19,9 @@ const Units = () => {
   const setSelectedUnit = useUnitStore((state) => state.setSelectedUnit);
   const setUnits = useUnitStore((state) => state.setUnits);
   const units = useUnitStore((state) => state.units);
+  const setLocation = useUnitStore((state) => state.setLocation);
+  const showModals = useUnitStore((state) => state.showUpdateModal);
+  const setShowModals = useUnitStore((state) => state.setShowUpdateModal);
   const { data, isLoading, error } = useUnitsQuery();
   const searchItems = useRef<{ value: string; label: string }[]>([]);
   const [clicked, setClicked] = useState<UnitData | null>(null);
@@ -26,6 +31,23 @@ const Units = () => {
     head: number | null;
     label: string;
   } | null>(null);
+
+  const updateAction = [
+    {
+      title: "Use my GPS",
+      function: () => handleUpdate("gps"),
+    },
+    {
+      title: "Pin on maps",
+      function: () => handleUpdate("pin"),
+    },
+  ];
+
+  function handleUpdate(type: "gps" | "pin") {
+    if (type === "gps") {
+      setLocation("gps");
+    }
+  }
 
   function setSelectedUnitById(id: string) {
     const selectedUnit = units.find((unit: UnitData) => unit.name === id);
@@ -198,6 +220,16 @@ const Units = () => {
       )}
 
       <HamburgerMenu />
+      {updatingUnit && <UpdateModals />}
+      {updatingUnit && (
+        <AlertDialogComp
+          open={showModals}
+          setOpen={setShowModals}
+          title="Update Location"
+          description="Are you sure you want to update the location of this unit?"
+          action={updateAction}
+        />
+      )}
     </div>
   );
 };

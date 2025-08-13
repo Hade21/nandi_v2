@@ -1,6 +1,5 @@
 "use client";
 
-import AlertDialogComp from "@/components/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useUnitStore } from "@/utils/storeProvider";
@@ -24,10 +23,9 @@ const CardUnit = (props: CardUnitProps) => {
   const { status } = useSession();
   const router = useRouter();
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
-  const [isUpdating, setIsUpdating] = useState<boolean>(false);
   const setSelectedUnit = useUnitStore((state) => state.setSelectedUnit);
-  const setLocation = useUnitStore((state) => state.setLocation);
   const setUpdatingUnit = useUnitStore((state) => state.setUpdatingUnit);
+  const setShowModal = useUnitStore((state) => state.setShowUpdateModal);
 
   const date = new Date(props.dateTime!);
   const timeStampFormatted = `${date.toLocaleDateString("id-ID", {
@@ -38,23 +36,6 @@ const CardUnit = (props: CardUnitProps) => {
     hour: "numeric",
     minute: "numeric",
   })}`;
-
-  const updateAction = [
-    {
-      title: "Use my GPS",
-      function: () => handleUpdate("gps"),
-    },
-    {
-      title: "Pin on maps",
-      function: () => handleUpdate("pin"),
-    },
-  ];
-
-  function handleUpdate(type: "gps" | "pin") {
-    if (type === "gps") {
-      setLocation("gps");
-    }
-  }
 
   return (
     <div>
@@ -139,7 +120,7 @@ const CardUnit = (props: CardUnitProps) => {
                     <Button
                       type="button"
                       onClick={() => {
-                        setIsUpdating(true);
+                        setShowModal(true);
                         setUpdatingUnit(true);
                       }}
                     >
@@ -167,14 +148,6 @@ const CardUnit = (props: CardUnitProps) => {
             </motion.div>
           )}
         </motion.div>
-        <AlertDialogComp
-          open={isUpdating}
-          setOpen={setIsUpdating}
-          title="Update Location"
-          description="Are you sure you want to update the location of this unit?"
-          action={updateAction}
-          key={props.id + "-dialog"}
-        />
       </AnimatePresence>
     </div>
   );

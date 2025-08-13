@@ -5,6 +5,7 @@ export type UnitState = {
   units: UnitData[];
   selectedUnit: UnitData;
   updatingUnit: boolean;
+  showUpdateModal: boolean;
   updateLocation: "gps" | "pin" | null;
   tempMarker: {
     lat: number;
@@ -20,6 +21,7 @@ export type UnitAction = {
   setTempMarker: (units: UnitState["tempMarker"]) => void;
   setSelectedUnit: (unit: UnitState["selectedUnit"]) => void;
   setUpdatingUnit: (unit: UnitState["updatingUnit"]) => void;
+  setShowUpdateModal: (unit: UnitState["showUpdateModal"]) => void;
 };
 
 export type UnitStore = UnitState & UnitAction;
@@ -34,6 +36,7 @@ export const defaultInitState: UnitState = {
     createdBy: "",
   },
   updatingUnit: false,
+  showUpdateModal: false,
   tempMarker: {
     lat: 0,
     lng: 0,
@@ -57,5 +60,6 @@ export const createUnitStore = (initState: UnitState = defaultInitState) => {
     setSelectedUnit: (unit) => set(() => ({ selectedUnit: unit })),
     setUpdatingUnit: (unit) => set(() => ({ updatingUnit: unit })),
     setTempMarker: (marker) => set(() => ({ tempMarker: marker })),
+    setShowUpdateModal: (modal) => set(() => ({ showUpdateModal: modal })),
   }));
 };
