@@ -1,18 +1,18 @@
 "use server";
 
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { auth } from "@/app/auth";
 import axiosInstance from "@/lib/axios-instance";
 import { unitSchema } from "@/schema/unitSchema";
-import { AxiosError } from "axios";
-import { getServerSession } from "next-auth";
-import { CustomError, User } from "../../types";
-
-interface UserSession {
-  data: User;
-}
+import axios, { AxiosError } from "axios";
+import { CustomError } from "../../types/types";
 
 function handleError(error: unknown) {
+  console.log(`Error server side: ${error}`);
+  if (axios.isCancel(error)) {
+    return Promise.reject("Request canceled due to timeout");
+  }
   if (error instanceof AxiosError) {
+    console.log(`Axios Error: ${(error.config, error.stack, error.response)}`);
     const errorData: CustomError = error.response?.data;
     return Promise.reject(errorData.message);
   } else {
@@ -21,8 +21,8 @@ function handleError(error: unknown) {
 }
 
 export async function addUnit(formData: FormData) {
-  const session = await getServerSession(authOptions);
-  const accessToken = (session?.user as UserSession).data.token?.accessToken;
+  const session = await auth();
+  const accessToken = session?.user.data.token.accessToken;
   const data = {
     name: formData.get("name"),
     type: formData.get("type"),
@@ -45,8 +45,8 @@ export async function addUnit(formData: FormData) {
 }
 
 export async function updateUnit(formData: FormData) {
-  const session = await getServerSession(authOptions);
-  const accessToken = (session?.user as UserSession).data.token?.accessToken;
+  const session = await auth();
+  const accessToken = session?.user.data.token.accessToken;
   const data = {
     name: formData.get("name"),
     type: formData.get("type"),
@@ -63,17 +63,15 @@ export async function updateUnit(formData: FormData) {
         Authorization: `Bearer ${accessToken}`,
       },
     });
-    console.log(response.data);
     return response.data;
   } catch (error) {
-    console.log(error);
     return handleError(error);
   }
 }
 
 export async function getUnit(id: string) {
-  const session = await getServerSession(authOptions);
-  const accessToken = (session?.user as UserSession).data.token?.accessToken;
+  const session = await auth();
+  const accessToken = session?.user.data.token?.accessToken;
 
   try {
     const response = await axiosInstance.get(`/api/v1/units/${id}`, {
@@ -81,6 +79,49 @@ export async function getUnit(id: string) {
         Authorization: `Bearer ${accessToken}`,
       },
     });
+    return response.data;
+  } catch (error) {
+    return handleError(error);
+  }
+}
+
+export async function getAllUnit() {
+  try {
+    // const response = await axiosInstance.get("/api/v1/units");
+    // return response.data;
+    const response = await fetch("https://hade21.xyz/api/v1/units");
+    return response.json();
+  } catch (error) {
+    return handleError(error);
+  }
+}
+
+export async function updateLocation(formData: FormData) {
+  const session = await auth();
+  const accessToken = session?.user.data.token.accessToken;
+
+  const data = {
+    id: formData.get("id"),
+    long: formData.get("long"),
+    lat: formData.get("lat"),
+    alt: formData.get("alt"),
+    location: formData.get("location"),
+    dateTime: formData.get("dateTime"),
+    createdBy: formData.get("createdBy"),
+  };
+
+  const result = unitSchema.safeParse(data);
+  if (!result.success) throw new Error(result.error.message);
+
+  try {
+    const response = await axiosInstance.put(
+      `/api/v1/units/${data.id}/location`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
     return response.data;
   } catch (error) {
     return handleError(error);

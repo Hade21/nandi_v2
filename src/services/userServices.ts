@@ -2,7 +2,7 @@
 
 import axiosInstance from "@/lib/axios-instance";
 import { AxiosError } from "axios";
-import { CustomError } from "../../types";
+import { CustomError } from "../../types/types";
 import { registerSchema } from "../schema/userSchema";
 
 export async function register(formData: FormData) {

@@ -34,8 +34,31 @@ export type CustomError = {
 };
 
 export type SignInResult = {
-  error: string | null;
+  error: string | undefined;
   ok: boolean;
   status: number;
   url: string | null;
 };
+
+export type UnitLocation = {
+  id?: string;
+  long: string;
+  lat: string;
+  createdBy: string;
+  alt: string;
+  location: string;
+  dateTime: string;
+};
+
+export type UnitData = {
+  id: string;
+  name: string;
+  type: string;
+  egi: string;
+  createdBy: string;
+  locations?: UnitLocation;
+};
+
+export interface UserSession {
+  data: User;
+}
