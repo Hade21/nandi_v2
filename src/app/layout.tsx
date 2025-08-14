@@ -4,11 +4,13 @@ import NextAuthSession from "@/utils/sessionProvider";
 import { UnitStoreProvider } from "@/utils/storeProvider";
 import ThemeProvider from "@/utils/themeProvider";
 import type { Metadata } from "next";
-import { Inter, Rubik_Moonrocks } from "next/font/google";
+import { Poppins, Rubik_Moonrocks } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({
+const poppins = Poppins({
   subsets: ["latin"],
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+  variable: "--font-poppins",
 });
 
 const rubik_moonrocks = Rubik_Moonrocks({
@@ -30,7 +32,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning={true}>
       <body
-        className={`${rubik_moonrocks.variable} ${inter.className} antialiased`}
+        className={`${rubik_moonrocks.variable} ${poppins.className} antialiased`}
       >
         <ThemeProvider
           attribute="class"

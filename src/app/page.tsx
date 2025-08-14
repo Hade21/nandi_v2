@@ -8,13 +8,13 @@ import Link from "next/link";
 export default function Home() {
   return (
     <div>
-      <main className="w-full h-screen flex flex-col justify-center items-center relative bg-white bg-opacity-70 dark:bg-black dark:bg-opacity-70">
+      <main className="w-full h-screen flex flex-col justify-center items-center relative bg-white bg-opacity-30 dark:bg-black dark:bg-opacity-60">
         <div className="absolute top-5 right-5">
           <ThemeSwitcher />
         </div>
         <div className="title">
-          <h1 className="text-5xl font-bold flex flex-wrap gap-y-2 justify-center gap-3 items-center relative -translate-x-3">
-            <GradientText text="Welcome to" />
+          <h1 className="text-5xl font-extrabold flex flex-wrap gap-y-2 justify-center gap-3 items-center relative -translate-x-3">
+            <GradientText text="Welcome to" className="text-shadow-md" />
             <span className="font-[family-name:var(--font-rubik-moonrocks)] text-blue-500">
               Nandi
             </span>
