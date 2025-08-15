@@ -1,9 +1,9 @@
 "use client";
 
 import { MoonIcon, SunIcon } from "lucide-react";
-import React, { useEffect, useState } from "react";
-import { Switch } from "./animate-ui/base/switch";
 import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
+import { Switch } from "./animate-ui/base/switch";
 
 const ThemeSwitcher = () => {
   const [checked, setChecked] = useState(false);
@@ -16,13 +16,13 @@ const ThemeSwitcher = () => {
   }, [checked, setTheme]);
 
   return (
-    <div className="flex items-center space-x-3">
+    <div>
       <Switch
         checked={checked}
         onCheckedChange={(value) => setChecked(value)}
         aria-label="Toggle theme switcher"
-        leftIcon={<SunIcon className="-translate-y-1/2" />}
-        rightIcon={<MoonIcon className="-translate-y-1/2" />}
+        leftIcon={<SunIcon />}
+        rightIcon={<MoonIcon />}
         thumbIcon={ThumbIcon}
       />
     </div>

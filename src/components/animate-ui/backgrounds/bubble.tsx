@@ -71,7 +71,7 @@ function BubbleBackground({
       ref={containerRef}
       data-slot="bubble-background"
       className={cn(
-        'relative size-full overflow-hidden bg-gradient-to-br from-violet-900 to-blue-900',
+        'relative size-full overflow-hidden bg-linear-to-br from-violet-900 to-blue-900',
         className,
       )}
       {...props}
@@ -149,7 +149,7 @@ function BubbleBackground({
         />
 
         <motion.div
-          className="absolute inset-0 flex justify-center items-center origin-[calc(50%_-_800px)_calc(50%_+_200px)]"
+          className="absolute inset-0 flex justify-center items-center origin-[calc(50%-800px)_calc(50%+200px)]"
           animate={{ rotate: 360 }}
           transition={{ duration: 20, ease: 'linear', repeat: Infinity }}
         >

@@ -48,7 +48,7 @@ function Switch({
       {...props}
       onCheckedChange={handleCheckedChange}
       className={cn(
-        'peer relative inline-flex p-[3px] h-6 w-10 shrink-0 cursor-pointer items-center rounded-full transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 data-[checked]:bg-primary data-[unchecked]:bg-input data-[checked]:justify-end data-[unchecked]:justify-start',
+        'peer relative inline-flex p-[3px] h-6 w-10 shrink-0 cursor-pointer items-center rounded-full transition-colors outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 data-checked:bg-primary data-unchecked:bg-input data-checked:justify-end data-unchecked:justify-start',
         className,
       )}
       render={
@@ -93,7 +93,7 @@ function Switch({
         render={
           <motion.div
             whileTap="tab"
-            className="relative pointer-events-none z-[1] [&_svg]:size-3 flex items-center justify-center rounded-full bg-background shadow-lg ring-0 dark:text-neutral-400 text-neutral-500"
+            className="relative pointer-events-none z-1 [&_svg]:size-3 flex items-center justify-center rounded-full bg-background shadow-lg ring-0 dark:text-neutral-400 text-neutral-500"
             layout
             transition={{ type: 'spring', stiffness: 300, damping: 25 }}
             style={{ width: 18, height: 18 }}

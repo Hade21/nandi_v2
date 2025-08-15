@@ -126,7 +126,7 @@ const UserForm = () => {
             <p>or</p>
             <Button
               type="button"
-              variant={"outline"}
+              variant="outline"
               onClick={() => router.push("/auth/register")}
             >
               Register
