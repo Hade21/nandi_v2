@@ -63,7 +63,14 @@ const UpdateModals = () => {
       type: "",
       egi: "",
       createdBy: "",
-      locations: form.getValues(),
+      locations: {
+        alt: "0",
+        long: "0",
+        lat: "0",
+        location: "",
+        dateTime: "",
+        createdBy: "",
+      },
     });
   }, [form, setSelectedUnit, setUpdatingUnit]);
 

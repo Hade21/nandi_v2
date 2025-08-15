@@ -24,7 +24,7 @@ const Login = () => {
               <CardTitle>
                 <h1 className="text-2xl">
                   Welcome to{" "}
-                  <span className="font-[family-name:var(--font-rubik-moonrocks)] text-blue-500">
+                  <span className="font-(family-name:--font-rubik-moonrocks) text-blue-500">
                     Nandi
                   </span>
                 </h1>
